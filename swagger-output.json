@@ -17,6 +17,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "429": {
+            "description": "Too Many Requests"
           }
         }
       }
@@ -73,6 +76,9 @@
           "422": {
             "description": "Unprocessable Entity"
           },
+          "429": {
+            "description": "Too Many Requests"
+          },
           "503": {
             "description": "Service Unavailable"
           }
@@ -122,6 +128,9 @@
           "422": {
             "description": "Unprocessable Entity"
           },
+          "429": {
+            "description": "Too Many Requests"
+          },
           "503": {
             "description": "Service Unavailable"
           }
@@ -148,6 +157,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -178,6 +190,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -213,6 +228,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -262,6 +280,9 @@
           "401": {
             "description": "Unauthorized"
           },
+          "429": {
+            "description": "Too Many Requests"
+          },
           "503": {
             "description": "Service Unavailable"
           }
@@ -309,6 +330,9 @@
           },
           "409": {
             "description": "Conflict"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -361,6 +385,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -416,6 +443,9 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "429": {
+            "description": "Too Many Requests"
           }
         }
       }
@@ -468,6 +498,9 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "429": {
+            "description": "Too Many Requests"
           }
         }
       }
@@ -509,6 +542,9 @@
           "422": {
             "description": "Unprocessable Entity"
           },
+          "429": {
+            "description": "Too Many Requests"
+          },
           "503": {
             "description": "Service Unavailable"
           }
@@ -547,6 +583,9 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"
@@ -591,6 +630,9 @@
           "422": {
             "description": "Unprocessable Entity"
           },
+          "429": {
+            "description": "Too Many Requests"
+          },
           "503": {
             "description": "Service Unavailable"
           }
@@ -633,6 +675,9 @@
           },
           "422": {
             "description": "Unprocessable Entity"
+          },
+          "429": {
+            "description": "Too Many Requests"
           },
           "503": {
             "description": "Service Unavailable"

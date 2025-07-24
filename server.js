@@ -4,6 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerdoc = require('./swagger-output.json');
 const { connectToMongoDB } = require('./config/db');
 const {
+  errorHandler,
   notFoundHandler,
   requestLogger,
   rateLimiter,
