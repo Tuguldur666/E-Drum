@@ -24,20 +24,16 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
       return { success: false, message: 'User already exists with this email address.' };
     }
 
-    const existingUnverifiedUser = await User.findOne({
-      phoneNumber,
-      isVerified: false
-    }).sort({ createdAt: -1 });
+    const existingUnverifiedUser = await User.findOne({ phoneNumber, isVerified: false }).sort({ createdAt: -1 });
 
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
     let userToSave;
 
     if (existingUnverifiedUser) {
       existingUnverifiedUser.firstName = firstName;
       existingUnverifiedUser.lastName = lastName;
       existingUnverifiedUser.email = email;
-      existingUnverifiedUser.password 
+      existingUnverifiedUser.password = password; 
       userToSave = existingUnverifiedUser;
     } else {
       userToSave = new User({
@@ -45,9 +41,9 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
         lastName,
         phoneNumber,
         email,
-        password: hashedPassword,
+        password, 
         isVerified: false,
-        createdAt: new Date() 
+        createdAt: new Date()
       });
     }
 
@@ -71,7 +67,6 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
       accessToken,
       refreshToken
     };
-
   } catch (error) {
     console.error('❌ registerUser Error:', error);
     return {
@@ -95,7 +90,7 @@ async function loginUser({ phoneNumber, password }) {
       return { success: false, message: 'User not found or not verified.' };
     }
 
-     const isMatch = await user.comparePassword(password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return { success: false, message: 'Invalid phone number or password' };
     }
@@ -109,7 +104,6 @@ async function loginUser({ phoneNumber, password }) {
       accessToken,
       refreshToken
     };
-
   } catch (error) {
     console.error('❌ loginUser Error:', error);
     return {
