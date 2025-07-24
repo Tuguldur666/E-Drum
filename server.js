@@ -22,6 +22,8 @@ app.use(cors({
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerdoc));
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
+const verifyRouter = require('./routes/otp');
+app.use('/otp', verifyRouter);
 
 app.get('/', (req, res) => {
   res.send('Server is running!');

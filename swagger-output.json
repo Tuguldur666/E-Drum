@@ -471,6 +471,174 @@
           }
         }
       }
+    },
+    "/otp/verify": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Verify user via OTP",
+        "description": "Verifies a user by phone number and OTP code",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phoneNumber": {
+                  "type": "number",
+                  "example": 99881175
+                },
+                "code": {
+                  "type": "string",
+                  "example": "712329"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/otp/forgot_pass": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Send OTP for password reset",
+        "description": "Sends a 6-digit OTP to the provided phone number",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phoneNumber": {
+                  "type": "number",
+                  "example": 99881175
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/otp/verify_reset": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify OTP for password reset",
+        "description": "Verifies a 6-digit OTP sent to the user’s registered phone number for password reset.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phoneNumber": {
+                  "type": "number",
+                  "example": 99881175
+                },
+                "code": {
+                  "type": "string",
+                  "example": "712329"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/otp/reset_password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password",
+        "description": "Resets the user’s password after OTP verification.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phoneNumber": {
+                  "type": "number",
+                  "example": 99881175
+                },
+                "newPassword": {
+                  "type": "string",
+                  "example": "newStrongPassword123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
     }
   }
 }
