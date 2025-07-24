@@ -10,11 +10,11 @@ exports.registerUser = async (req, res) => {
         in: 'body',
         required: true,
         schema: {
-            firstName: "Tuuguu",
-            lastName: "Dambasuren",
-            email: "tuuguu@example.com",
-            phoneNumber: "99881175",
-            password: "1234"
+            firstName: " ",
+            lastName: " ",
+            email: " ",
+            phoneNumber: " ",
+            password: " "
         }
     }
   */
@@ -78,8 +78,8 @@ exports.login = async (req, res) => {
       in: 'body',
       required: true,
       schema: {
-        phoneNumber: "99881175",
-        password: "1234"
+        phoneNumber: " ",
+        password: " "
       }
     }
   */
@@ -230,7 +230,7 @@ exports.sendOtpToCurrentPhone = async (req, res) => {
       required: true,
       description: 'Bearer access token',
       type: 'string',
-      example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      example: 'Bearer ...'
     }
   */
   try {
@@ -353,7 +353,7 @@ exports.verifyCurrentPassword = async (req, res) => {
       required: true,
       description: 'Bearer access token',
       type: 'string',
-      example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      example: 'Bearer ...'
     }
     #swagger.parameters['body'] = {
       in: 'body',
@@ -398,7 +398,7 @@ exports.changeToNewPassword = async (req, res) => {
       required: true,
       description: 'Bearer access token',
       type: 'string',
-      example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      example: 'Bearer ...'
     }
     #swagger.parameters['body'] = {
       in: 'body',

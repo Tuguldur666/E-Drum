@@ -41,23 +41,23 @@
               "properties": {
                 "firstName": {
                   "type": "string",
-                  "example": "Tuuguu"
+                  "example": " "
                 },
                 "lastName": {
                   "type": "string",
-                  "example": "Dambasuren"
+                  "example": " "
                 },
                 "email": {
                   "type": "string",
-                  "example": "tuuguu@example.com"
+                  "example": " "
                 },
                 "phoneNumber": {
                   "type": "string",
-                  "example": "99881175"
+                  "example": " "
                 },
                 "password": {
                   "type": "string",
-                  "example": "1234"
+                  "example": " "
                 }
               }
             }
@@ -102,11 +102,11 @@
               "properties": {
                 "phoneNumber": {
                   "type": "string",
-                  "example": "99881175"
+                  "example": " "
                 },
                 "password": {
                   "type": "string",
-                  "example": "1234"
+                  "example": " "
                 }
               }
             }
@@ -214,7 +214,7 @@
             "required": true,
             "description": "Bearer access token",
             "type": "string",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "example": "Bearer ..."
           },
           {
             "name": "authorization",
@@ -409,7 +409,7 @@
             "required": true,
             "description": "Bearer access token",
             "type": "string",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "example": "Bearer ..."
           },
           {
             "name": "body",
@@ -464,7 +464,7 @@
             "required": true,
             "description": "Bearer access token",
             "type": "string",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "example": "Bearer ..."
           },
           {
             "name": "body",
@@ -593,12 +593,12 @@
               "type": "object",
               "properties": {
                 "phoneNumber": {
-                  "type": "number",
-                  "example": 99881175
+                  "type": "string",
+                  "example": " "
                 },
                 "code": {
                   "type": "string",
-                  "example": "712329"
+                  "example": " "
                 }
               }
             }
@@ -639,8 +639,8 @@
               "type": "object",
               "properties": {
                 "phoneNumber": {
-                  "type": "number",
-                  "example": 99881175
+                  "type": "string",
+                  "example": " "
                 }
               }
             }
@@ -681,12 +681,12 @@
               "type": "object",
               "properties": {
                 "phoneNumber": {
-                  "type": "number",
-                  "example": 99881175
+                  "type": "string",
+                  "example": " "
                 },
                 "code": {
                   "type": "string",
-                  "example": "712329"
+                  "example": " "
                 }
               }
             }
@@ -727,12 +727,12 @@
               "type": "object",
               "properties": {
                 "phoneNumber": {
-                  "type": "number",
-                  "example": 99881175
+                  "type": "string",
+                  "example": " "
                 },
                 "newPassword": {
                   "type": "string",
-                  "example": "newStrongPassword123"
+                  "example": " "
                 }
               }
             }

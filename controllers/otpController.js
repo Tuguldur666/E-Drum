@@ -10,8 +10,8 @@ exports.verifyUser = async (req, res) => {
     in: 'body',
     required: true,
     schema: {
-      phoneNumber: 99881175,
-      code: "712329"
+      phoneNumber:" " ,
+      code: " "
     }
   }
   */
@@ -58,7 +58,7 @@ exports.forgotPass = async (req, res) => {
       in: 'body',
       required: true,
       schema: {
-        phoneNumber: 99881175
+        phoneNumber: " "
       }
     }
   */
@@ -100,8 +100,8 @@ exports.verifyResetOtp = async (req, res) => {
       in: 'body',
       required: true,
       schema: {
-        phoneNumber: 99881175,
-        code: "712329"
+        phoneNumber: " ",
+        code: " "
       }
     }
   */
@@ -145,8 +145,8 @@ exports.resetPass = async (req, res) => {
       in: 'body',
       required: true,
       schema: {
-        phoneNumber: 99881175,
-        newPassword: "newStrongPassword123"
+        phoneNumber: " ",
+        newPassword: " "
       }
     }
   */
