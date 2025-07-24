@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const otp = require('./otpService');
 const bcrypt = require('bcrypt');
+const { verifyToken } = require('../utils/token');
 
 async function registerUser({ firstName, lastName, phoneNumber, email, password }) {
   try {
