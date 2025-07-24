@@ -37,17 +37,9 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
       existingUnverifiedUser.firstName = firstName;
       existingUnverifiedUser.lastName = lastName;
       existingUnverifiedUser.email = email;
-
-      if (password) {
-        const salt = await bcrypt.genSalt(10);
-        existingUnverifiedUser.password = await bcrypt.hash(password, salt);
-      }
-
+      existingUnverifiedUser.password 
       userToSave = existingUnverifiedUser;
     } else {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
       userToSave = new User({
         firstName,
         lastName,
@@ -89,6 +81,7 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
   }
 }
 
+
 ///////////////////// Register ////////////////////////////
 
 async function loginUser({ phoneNumber, password }) {
@@ -102,9 +95,9 @@ async function loginUser({ phoneNumber, password }) {
       return { success: false, message: 'User not found or not verified.' };
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      return { success: false, message: 'Invalid credentials.' };
+     const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return { success: false, message: 'Invalid phone number or password' };
     }
 
     const accessToken = user.generateAccessToken();
@@ -125,6 +118,7 @@ async function loginUser({ phoneNumber, password }) {
     };
   }
 }
+
 ////////////////////////// Login ////////////////////////
 
 async function refreshToken(req) {
