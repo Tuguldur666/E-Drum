@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerdoc = require('./swagger-output.json');
@@ -8,7 +9,7 @@ const cors = require('cors');
 
 dotenv.config({ path: './config/config.env' });
 const app = express();
-const PORT = process.env.PORT 
+const PORT = process.env.PORT;
 
 app.use(express.json());
 
@@ -28,24 +29,16 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`✅ Server is running at http://localhost:${PORT}`);
-});
-
 connectToMongoDB()
   .then(() => {
-    const PORT = process.env.PORT;
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`✅ Server is running at http://localhost:${PORT}`);
     });
-    check();
+
   })
   .catch(err => {
     console.error('Database connection failed:', err);
     process.exit(1);
   });
 
-
-
 module.exports = app;
-
