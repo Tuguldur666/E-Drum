@@ -3,7 +3,12 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerdoc = require('./swagger-output.json');
 const { connectToMongoDB } = require('./config/db');
-const errorHandler = require('./middleware/errorHandler');
+const {
+  notFoundHandler,
+  requestLogger,
+  rateLimiter,
+  sanitizeInputs
+} = require('./middleware/Handler');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -19,6 +24,10 @@ app.use(cors({
   exposedHeaders: ['x-refresh-token'],
 }));
 
+app.use(requestLogger);
+app.use(rateLimiter);
+app.use(sanitizeInputs);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerdoc));
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
@@ -29,6 +38,7 @@ app.get('/', (req, res) => {
   res.send('Server is running!');
 });
 
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 connectToMongoDB()
