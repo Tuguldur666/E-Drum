@@ -13,9 +13,14 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
       return { success: false, message: 'All fields are required.' };
     }
 
-    const verifiedUser = await User.findOne({ phoneNumber, isVerified: true });
-    if (verifiedUser) {
+    const verifiedPhoneUser = await User.findOne({ phoneNumber, isVerified: true });
+    if (verifiedPhoneUser) {
       return { success: false, message: 'User already exists with this phone number.' };
+    }
+
+    const verifiedEmailUser = await User.findOne({ email, isVerified: true });
+    if (verifiedEmailUser) {
+      return { success: false, message: 'User already exists with this email address.' };
     }
 
     const existingUnverifiedUser = await User.findOne({
@@ -39,7 +44,6 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
 
       userToSave = existingUnverifiedUser;
     } else {
-
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -83,6 +87,7 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
     };
   }
 }
+
 ///////////////////// Register ////////////////////////////
 
 async function loginUser({ phoneNumber, password }) {
