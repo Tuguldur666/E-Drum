@@ -30,8 +30,13 @@ app.use(rateLimiter);
 app.use(sanitizeInputs);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerdoc));
+
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
+
+const adminRouter = require('./routes/admin');
+app.use('/admin', adminRouter);
+
 const verifyRouter = require('./routes/otp');
 app.use('/otp', verifyRouter);
 

@@ -505,6 +505,78 @@
         }
       }
     },
+    "/admin/adminRegister": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Admin register teacher and store",
+        "description": "Admin register user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Bearer access token",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": " "
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": " "
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "example": " "
+                },
+                "email": {
+                  "type": "string",
+                  "example": " "
+                },
+                "password": {
+                  "type": "string",
+                  "example": " "
+                },
+                "role": {
+                  "type": "string",
+                  "example": " "
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/otp/verify": {
       "post": {
         "tags": [
