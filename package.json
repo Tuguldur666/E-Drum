@@ -1,0 +1,31 @@
+{
+  "name": "e-drum",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tuguldur666/E-Drum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tuguldur666/E-Drum/issues"
+  },
+  "homepage": "https://github.com/Tuguldur666/E-Drum#readme",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.4",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
