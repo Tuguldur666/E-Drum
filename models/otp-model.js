@@ -1,16 +1,10 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require('mongoose');
 
-const otpSchema = new Schema({
-  number: { type: String, required: true },
-  otp: { type: String, required: true },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    expires: 600, // expires after 10 minutes (600 seconds)
-  },
+const otpSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  code: { type: String, required: true },
+  authType: { type: String, enum: ['verify', 'reset', 'change_old', 'change_new'], required: true },
+  createdAt: { type: Date, default: Date.now, expires: 300 } 
 });
 
-// Optional: Improve index clarity
-otpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 600 });
-
-module.exports = model("Otp", otpSchema);
+module.exports = mongoose.model('Otp', otpSchema);
