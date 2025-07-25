@@ -1,62 +1,39 @@
-// server.js
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerdoc = require('./swagger-output.json');
-const { connectToMongoDB } = require('./config/db');
-const {
-  errorHandler,
-  notFoundHandler,
-  requestLogger,
-  rateLimiter,
-  sanitizeInputs
-} = require('./middleware/Handler');
-const dotenv = require('dotenv');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const bodyParser = require("body-parser");
+const cors = require('cors')
 
-dotenv.config({ path: './config/config.env' });
+const swaggerDoc = require("./swagger-output.json");
+const HttpError = require("./middleware/http-error");
+const db = require("./db");
+const userRoutes = require("./routes/user-routes");
+const adminRoutes = require("./routes/admin-routes");
+
 const app = express();
-const PORT = process.env.PORT;
-
-app.use(express.json());
 
 app.use(cors({
-  origin: true,
-  credentials: true,
-  exposedHeaders: ['x-refresh-token'],
+  origin: '*', // Allow all origins for debugging
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+app.use(bodyParser.json());
 
-app.use(requestLogger);
-app.use(rateLimiter);
-app.use(sanitizeInputs);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use('/user', userRoutes);
+app.use('/admin', adminRoutes);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerdoc));
-
-const userRouter = require('./routes/user');
-app.use('/user', userRouter);
-
-const adminRouter = require('./routes/admin');
-app.use('/admin', adminRouter);
-
-const verifyRouter = require('./routes/otp');
-app.use('/otp', verifyRouter);
-
-app.get('/', (req, res) => {
-  res.send('Server is running!');
+    
+app.use((req, res, next) => {
+  throw new HttpError("Could not find this route.", 404);
 });
 
-app.use(notFoundHandler);
-app.use(errorHandler);
+app.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  res.status(error.code || 503).json({ message: error.message || "An unknown error occurred!" });
+});
 
-connectToMongoDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`✅ Server is running at http://localhost:${PORT}`);
-    });
-
-  })
-  .catch(err => {
-    console.error('Database connection failed:', err);
-    process.exit(1);
-  });
-
-module.exports = app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Express running at http://localhost:${PORT}`);
+});
