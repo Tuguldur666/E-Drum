@@ -340,8 +340,7 @@ exports.verifyNewPhoneAndUpdate = async (req, res) => {
 /////////////// Verify and Update New Phone Number Controller /////////////////////////
 
 exports.verifyCurrentPassword = async (req, res) => {
-
-    /*
+  /*
     #swagger.tags = ['Users']
     #swagger.summary = 'Update current phone number'
     #swagger.description = 'Updates the phone number.'
@@ -358,38 +357,57 @@ exports.verifyCurrentPassword = async (req, res) => {
       required: true,
       schema: {
         currentPassword:" "
-
       }
     }
   */
 
-  const authHeader = req.headers.authorization;
-  const { currentPassword } = req.body;
+  try {
+    const authHeader = req.headers.authorization;
+    const { currentPassword } = req.body;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Access token required' });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Access token required' });
+    }
+
+    if (!currentPassword) {
+      return res.status(422).json({ success: false, message: 'Field "currentPassword" is required' });
+    }
+
+    const accessToken = authHeader.split(' ')[1];
+    const result = await service.verifyCurrentPassword(accessToken, currentPassword);
+
+    return res.status(result.success ? 200 : result.status || 400).json(result);
+
+  } catch (err) {
+    console.error('❌ verifyCurrentPassword Error:', err);
+
+    if (err.code === 'ECONNREFUSED' || err.name === 'MongoNetworkError') {
+      return res.status(503).json({
+        success: false,
+        message: 'Service temporarily unavailable. Please try again later.',
+      });
+    }
+
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired access token',
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: 'Bad request while verifying password.',
+    });
   }
-
-  if (!currentPassword){ 
-    return res.status(422).json({ success: false, message: 'Field is missing' });
-  }
-
-  const accessToken = authHeader.split(' ')[1];
-
-
-  const result = await  service.verifyCurrentPassword(accessToken,currentPassword)
-  res.status(result.success ? 200 : 400).json(result);
-
-}
+};
 //////////////////// Verify Current Password Controller /////////////////////////////////////
 
-
 exports.changeToNewPassword = async (req, res) => {
-
-      /*
+  /*
     #swagger.tags = ['Users']
-    #swagger.summary = 'Update current phone number'
-    #swagger.description = 'Updates the phone number.'
+    #swagger.summary = 'Change current password'
+    #swagger.description = 'Changes the user password using a valid access token.'
     #swagger.parameters['Authorization'] = {
       in: 'header',
       name: 'Authorization',
@@ -402,28 +420,51 @@ exports.changeToNewPassword = async (req, res) => {
       in: 'body',
       required: true,
       schema: {
-        newPassword:" "
-
+        newPassword: "new_secure_password"
       }
     }
   */
 
-  const authHeader = req.headers.authorization;
-  const { newPassword } = req.body;
+  try {
+    const authHeader = req.headers.authorization;
+    const { newPassword } = req.body;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Access token required' });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Access token required' });
+    }
+
+    if (!newPassword) {
+      return res.status(422).json({ success: false, message: 'Field "newPassword" is required' });
+    }
+
+    const accessToken = authHeader.split(' ')[1];
+    const result = await service.changeToNewPassword(accessToken, newPassword);
+
+    return res.status(result.success ? 200 : result.status || 400).json(result);
+
+  } catch (err) {
+    console.error('❌ changeToNewPassword Error:', err);
+
+    if (err.code === 'ECONNREFUSED' || err.name === 'MongoNetworkError') {
+      return res.status(503).json({
+        success: false,
+        message: 'Service temporarily unavailable. Please try again later.',
+      });
+    }
+
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired access token',
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: 'Bad request while changing password.',
+    });
   }
-
-  if (!newPassword){ 
-    return res.status(422).json({ success: false, message: 'Field is missing' });
-  }
-
-  const accessToken = authHeader.split(' ')[1];
-
-  const result = await service.changeToNewPassword(accessToken, newPassword);
-  res.status(result.success ? 200 : 400).json(result);
-
 };
+
 
 /////////// Update New Password Controller ////////////////////////////////////////
