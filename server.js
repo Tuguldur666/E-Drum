@@ -13,8 +13,9 @@ const adminRoutes = require("./routes/admin-routes");
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3001',  // frontend origin
-  credentials: true                 // allow credentials (cookies, auth headers)
+  origin: '*', // Allow all origins for debugging
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(bodyParser.json());
 
