@@ -11,26 +11,13 @@
     "http"
   ],
   "paths": {
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          }
-        }
-      }
-    },
-    "/user/register": {
+    "/api/user/signup": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "User Registration",
-        "description": "Registers a new user with firstName, lastName, email, phoneNumber, and password",
+        "summary": "User Signup",
+        "description": "Create a new user with phone number and password",
         "parameters": [
           {
             "name": "body",
@@ -39,25 +26,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
-                  "type": "string",
-                  "example": " "
-                },
-                "lastName": {
-                  "type": "string",
-                  "example": " "
-                },
-                "email": {
-                  "type": "string",
-                  "example": " "
-                },
                 "phoneNumber": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "password": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 }
               }
             }
@@ -66,32 +41,17 @@
         "responses": {
           "201": {
             "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/login": {
+    "/api/user/verify-signup-otp": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "User login",
-        "description": "Logs in a user with phoneNumber and password",
+        "summary": "Handle Signup OTP",
+        "description": "Verify or resend OTP for user signup",
         "parameters": [
           {
             "name": "body",
@@ -102,11 +62,45 @@
               "properties": {
                 "phoneNumber": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
+                },
+                "otp": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User Login",
+        "description": "Login an existing user with phone number and password",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phoneNumber": {
+                  "type": "string",
+                  "example": "string"
                 },
                 "password": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 }
               }
             }
@@ -115,144 +109,72 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/refreshToken": {
+    "/api/user/refresh-token": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Refresh Access Token",
-        "description": "Returns a new access token given a valid refresh token.",
+        "description": "Refresh access token using a valid refresh token",
         "parameters": [
           {
-            "name": "x-refresh-token",
-            "in": "header",
-            "description": "Refresh token to issue a new access token",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refreshToken": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/getuser": {
+    "/api/user/user/{id}": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "Get user data",
-        "description": "Returns user details from access token. Token is passed in the Authorization header.",
+        "summary": "Get User Data",
+        "description": "Retrieve user data using the user ID",
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer access token",
+            "name": "id",
+            "in": "path",
             "required": true,
             "type": "string",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "description": "ID of the user to fetch data for",
+            "example": "123456"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/phone/send-otp-current": {
+    "/api/user/request-reset": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "Initiate phone number change",
-        "description": "Sends an OTP to the user’s current phone number to confirm ownership.",
+        "summary": "Request OTP for Password Reset",
+        "description": "Request OTP for resetting password using phone number",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "Bearer access token",
-            "type": "string",
-            "example": "Bearer ..."
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/user/phone/verify-current-otp": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Verify old phone OTP",
-        "description": "Verifies OTP on old number.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "Bearer token",
-            "type": "string"
-          },
           {
             "name": "body",
             "in": "body",
@@ -260,50 +182,29 @@
             "schema": {
               "type": "object",
               "properties": {
-                "otp": {
+                "phoneNumber": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 }
               }
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/phone/send-otp-new": {
+    "/api/user/verify-reset-otp": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "Send OTP to new phone",
-        "description": " Sends OTP to new number.",
+        "summary": "Verify or Resend OTP for Password Reset",
+        "description": "Verify or resend OTP to reset the password",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "Bearer token",
-            "type": "string"
-          },
           {
             "name": "body",
             "in": "body",
@@ -311,105 +212,71 @@
             "schema": {
               "type": "object",
               "properties": {
-                "newPhoneNumber": {
+                "phoneNumber": {
                   "type": "string",
-                  "example": " "
-                }
-              }
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/user/phone/verify-and-update": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Verify old phone OTP and send OTP to new phone",
-        "description": "Verifies OTP on old number, then sends OTP to new number.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "Bearer token",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "otp": {
-                  "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
-                "newPhoneNumber": {
+                "otp": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 }
               }
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
     },
-    "/user/password/verifyCurrentPassword": {
+    "/api/user/reset-password": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
-        "summary": "Update current phone number",
-        "description": "Updates the phone number.",
+        "summary": "Reset Password",
+        "description": "Reset password using a valid reset token and new password",
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "description": "Bearer access token",
-            "type": "string",
-            "example": "Bearer ..."
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resetToken": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "newPassword": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/change-password": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change User Password",
+        "description": "Change the current password of the user",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           },
           {
             "name": "body",
@@ -420,52 +287,31 @@
               "properties": {
                 "currentPassword": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
+                },
+                "newPassword": {
+                  "type": "string",
+                  "example": "string"
                 }
               }
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
           }
         }
       }
     },
-    "/user/password/changePassword": {
+    "/api/admin/login": {
       "post": {
         "tags": [
-          "Users"
+          "Admin"
         ],
-        "summary": "Update current phone number",
-        "description": "Updates the phone number.",
+        "summary": "Login user",
+        "description": "Admin logs in to the system",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "description": "Bearer access token",
-            "type": "string",
-            "example": "Bearer ..."
-          },
           {
             "name": "body",
             "in": "body",
@@ -473,53 +319,37 @@
             "schema": {
               "type": "object",
               "properties": {
-                "newPassword": {
+                "phoneNumber": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "string"
                 }
               }
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
           }
         }
       }
     },
-    "/admin/adminRegister": {
+    "/api/admin/create": {
       "post": {
         "tags": [
           "Admin"
         ],
-        "summary": "Admin register teacher and store",
-        "description": "Admin register user",
+        "summary": "Create new user",
+        "description": "Create a new user in the system",
         "parameters": [
           {
-            "name": "Authorization",
+            "name": "authorization",
             "in": "header",
-            "required": true,
-            "description": "Bearer access token",
-            "type": "string",
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "type": "string"
           },
           {
             "name": "body",
@@ -530,30 +360,132 @@
               "properties": {
                 "firstName": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "lastName": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "phoneNumber": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "email": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "password": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 },
                 "role": {
                   "type": "string",
-                  "example": " "
+                  "example": "string"
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all users",
+        "description": "Retrieve all users from the system",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/user/{userId}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update user info",
+        "description": "Update user information in the system",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to update",
+            "example": "1234567"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete user",
+        "description": "Delete a user from the system",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to delete",
+            "example": "1234567"
           },
           {
             "name": "authorization",
@@ -564,201 +496,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/otp/verify": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Verify user via OTP",
-        "description": "Verifies a user by phone number and OTP code",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "phoneNumber": {
-                  "type": "string",
-                  "example": " "
-                },
-                "code": {
-                  "type": "string",
-                  "example": " "
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/otp/forgot_pass": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Send OTP for password reset",
-        "description": "Sends a 6-digit OTP to the provided phone number",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "phoneNumber": {
-                  "type": "string",
-                  "example": " "
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/otp/verify_reset": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Verify OTP for password reset",
-        "description": "Verifies a 6-digit OTP sent to the user’s registered phone number for password reset.",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "phoneNumber": {
-                  "type": "string",
-                  "example": " "
-                },
-                "code": {
-                  "type": "string",
-                  "example": " "
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/otp/reset_password": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Reset password",
-        "description": "Resets the user’s password after OTP verification.",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "phoneNumber": {
-                  "type": "string",
-                  "example": " "
-                },
-                "newPassword": {
-                  "type": "string",
-                  "example": " "
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "429": {
-            "description": "Too Many Requests"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         }
       }
