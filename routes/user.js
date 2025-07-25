@@ -21,4 +21,17 @@ router.post('/password/verifyCurrentPassword', userController.verifyCurrentPassw
 ////////////////////////////////////
 router.post('/password/changePassword', userController.changeToNewPassword);
 ////////////////////////////////////
+
+
+router.post('/verify', userController.verifyUser);
+// //////////////////////////////////
+router.post('/forgot_pass', userController.forgotPass);
+// //////////////////////////////////
+router.post('/verify_reset', userController.verifyResetOtp);
+// //////////////////////////////////
+router.post('/reset_password' , userController.resetPass);
+// //////////////////////////////////
+
+
+
 module.exports = router;

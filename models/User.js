@@ -2,17 +2,35 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName:  { type: String, required: true },
-  phoneNumber: { type: String, required: true, unique: true },
-  email:     { type: String, required: true, unique: true },
-  role:      { type: String, enum: ['student', 'teacher','store', 'admin'], default: 'student' },
-  password:  { type: String, required: true },
-  score:     { type: Number, default: 0 },
-  lastLogin: { type: Date },
-  isVerified:{ type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+const UserSchema = new mongoose.Schema({
+  firstName: { type: String, required: true, trim: true },
+  lastName: { type: String, required: true, trim: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  phoneNumber: { type: String, required: true, unique: true, trim: true },
+  password: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  role: { type: String, enum: ['teacher', 'student', 'store', 'admin'], required: true, default: 'student' },
+  score: { type: Number, default: 0 },
+  lastLogin: { type: Date, default: null },
+  userId: { 
+    type: Number, 
+    unique: true, 
+    required: true,
+  },
+}, { timestamps: true });
+
+
+UserSchema.pre('save', async function (next) {
+
+  if (!this.userId || isNaN(this.userId) || typeof this.userId === 'string') {
+    this.userId = Math.floor(Math.random() * 9000000) + 1000000;
+  }
+  
+  if (!Number.isInteger(this.userId) || this.userId < 1000000 || this.userId > 9999999) {
+    this.userId = Math.floor(Math.random() * 9000000) + 1000000;  
+  }
+
+  next();
 });
 
 
