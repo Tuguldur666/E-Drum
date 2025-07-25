@@ -10,9 +10,9 @@ const generateOtp = () => {
 };
 
 // === User Signup ===
-const signupService = async ({ firstName, lastName, email, phoneNumber, password, role = "student" }) => {
+const signupService = async ({ firstName, lastName, email, phoneNumber, password, role = 'student' }) => {
   if (!firstName || !lastName || !phoneNumber || !password) {
-    throw new HttpError("All fields are required.", 400);
+    throw new HttpError('All fields are required.', 400);
   }
 
   const normalizedEmail = email.toLowerCase();
@@ -22,7 +22,12 @@ const signupService = async ({ firstName, lastName, email, phoneNumber, password
   });
 
   if (existingUser) {
-    throw new HttpError("User already exists.", 422);
+    if (existingUser.email === normalizedEmail) {
+      throw new HttpError('Email is already taken.', 422);
+    }
+    if (existingUser.phoneNumber === phoneNumber) {
+      throw new HttpError('Phone number is already registered.', 422);
+    }
   }
 
   const userId = Math.floor(Math.random() * 9000000) + 1000000;
@@ -32,12 +37,12 @@ const signupService = async ({ firstName, lastName, email, phoneNumber, password
     lastName,
     email: normalizedEmail,
     phoneNumber,
-    password,  
+    password,
     role,
     isVerified: false,
     score: 0,
     lastLogin: null,
-    userId  
+    userId,
   });
 
   await newUser.save();
@@ -48,30 +53,30 @@ const signupService = async ({ firstName, lastName, email, phoneNumber, password
 
   const messageSent = await sendMessage(phoneNumber, otp);
   if (!messageSent) {
-    throw new HttpError("Failed to send OTP.", 503);
+    throw new HttpError('Failed to send OTP.', 503);
   }
 
-  return { message: "Signup successful. OTP sent to phone." };
+  return { message: 'Signup successful. OTP sent to phone.' };
 };
 
-// === SIGNUP OTP: VERIFY & RESEND ===
+// === Handle Signup OTP ===
 const handleSignupOtpService = async ({ phoneNumber, otp, action }) => {
-  if (!phoneNumber) throw new HttpError("Phone number is required.", 400);
+  if (!phoneNumber) throw new HttpError('Phone number is required.', 400);
 
   const user = await User.findOne({ phoneNumber });
-  if (!user) throw new HttpError("User not found.", 404);
-  if (user.isVerified) throw new HttpError("User already verified.", 400);
+  if (!user) throw new HttpError('User not found.', 404);
+  if (user.isVerified) throw new HttpError('User already verified.', 400);
 
-  if (action === "verify") {
-    if (!otp) throw new HttpError("OTP is required for verification.", 400);
+  if (action === 'verify') {
+    if (!otp) throw new HttpError('OTP is required for verification.', 400);
 
     const otpRecord = await Otp.findOne({ number: phoneNumber, otp });
-    if (!otpRecord) throw new HttpError("Invalid or expired OTP.", 400);
+    if (!otpRecord) throw new HttpError('Invalid or expired OTP.', 400);
 
     const isExpired = Date.now() - new Date(otpRecord.createdAt).getTime() > 60 * 1000;
     if (isExpired) {
       await Otp.deleteMany({ number: phoneNumber });
-      throw new HttpError("OTP expired.", 400);
+      throw new HttpError('OTP expired.', 400);
     }
 
     const updatedUser = await User.findOneAndUpdate(
@@ -85,19 +90,19 @@ const handleSignupOtpService = async ({ phoneNumber, otp, action }) => {
     const refreshToken = updatedUser.generateRefreshToken();
 
     return {
-      message: "Phone number verified successfully.",
+      message: 'Phone number verified successfully.',
       accessToken,
       refreshToken,
       user: updatedUser.toObject({ getters: true }),
     };
   }
 
-  if (action === "resend") {
+  if (action === 'resend') {
     const existingOtp = await Otp.findOne({ number: phoneNumber });
     if (existingOtp) {
       const timeSinceLastOtp = Date.now() - new Date(existingOtp.createdAt).getTime();
       if (timeSinceLastOtp < 60 * 1000) {
-        throw new HttpError("Please wait before requesting a new OTP.", 429);
+        throw new HttpError('Please wait before requesting a new OTP.', 429);
       }
       await Otp.deleteMany({ number: phoneNumber });
     }
@@ -106,37 +111,37 @@ const handleSignupOtpService = async ({ phoneNumber, otp, action }) => {
     await Otp.create({ number: phoneNumber, otp: newOtp });
 
     const messageSent = await sendMessage(phoneNumber, newOtp);
-    if (!messageSent) throw new HttpError("Failed to send OTP.", 503);
+    if (!messageSent) throw new HttpError('Failed to send OTP.', 503);
 
-    return { message: "OTP resent successfully." };
+    return { message: 'OTP resent successfully.' };
   }
 
-  throw new HttpError("Invalid action type.", 400);
+  throw new HttpError('Invalid action type.', 400);
 };
 
 // === User Login ===
 const loginService = async ({ phoneNumber, password }) => {
   if (!phoneNumber) {
-    throw new HttpError("Phone number is required.", 400);
+    throw new HttpError('Phone number is required.', 400);
   }
 
   if (!password) {
-    throw new HttpError("Password is required.", 400);
+    throw new HttpError('Password is required.', 400);
   }
 
   const user = await User.findOne({ phoneNumber });
 
   if (!user) {
-    throw new HttpError("User not found.", 404);
+    throw new HttpError('User not found.', 404);
   }
 
   if (!user.isVerified) {
-    throw new HttpError("Account not verified. Please verify your phone number.", 401);
+    throw new HttpError('Account not verified. Please verify your phone number.', 401);
   }
 
   const isValid = await user.comparePassword(password);
   if (!isValid) {
-    throw new HttpError("Invalid credentials.", 401);
+    throw new HttpError('Invalid credentials.', 401);
   }
 
   user.lastLogin = Date.now();
@@ -146,12 +151,13 @@ const loginService = async ({ phoneNumber, password }) => {
   const refreshToken = user.generateRefreshToken();
 
   return {
-    message: "Login successful",
+    message: 'Login successful',
     user: user.toObject({ getters: true }),
     accessToken,
     refreshToken,
   };
 };
+
 
 // === REFRESH TOKEN ===
 const refreshAccessTokenService = async (refreshToken) => {
