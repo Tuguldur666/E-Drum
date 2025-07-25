@@ -37,12 +37,9 @@ exports.registerUser = async (req, res) => {
     const result = await service.registerUser({ firstName, lastName, email, phoneNumber, password });
 
     if (result.success) {
-      res.set('x-refresh-token', result.refreshToken);
-
       return res.status(201).json({
         success: true,
-        message: result.message,
-        accessToken: result.accessToken
+        message: result.message || "User registered successfully"
       });
     }
 
@@ -67,6 +64,7 @@ exports.registerUser = async (req, res) => {
     });
   }
 };
+
 ////////////////// Register Controller /////////////////////////
 
 exports.login = async (req, res) => {

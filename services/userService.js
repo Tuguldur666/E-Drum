@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const otp = require('./otpService');
-const bcrypt = require('bcrypt');
 const { verifyToken } = require('../utils/token');
 
 async function registerUser({ firstName, lastName, phoneNumber, email, password }) {
@@ -57,15 +56,10 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
       };
     }
 
-    const accessToken = userToSave.generateAccessToken();
-    const refreshToken = userToSave.generateRefreshToken();
-
     return {
       success: true,
       message: 'User registered successfully. OTP sent.',
       userId: userToSave._id,
-      accessToken,
-      refreshToken
     };
   } catch (error) {
     console.error('❌ registerUser Error:', error);
@@ -85,18 +79,18 @@ async function loginUser({ phoneNumber, password }) {
       return { success: false, message: 'Phone number and password are required.' };
     }
 
-    const user = await User.findOne({ phoneNumber, isVerified: true });
-    if (!user) {
+    const existingUser = await User.findOne({ phoneNumber, isVerified: true });
+    if (!existingUser) {
       return { success: false, message: 'User not found or not verified.' };
     }
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await existingUser.comparePassword(password); 
     if (!isMatch) {
       return { success: false, message: 'Invalid phone number or password' };
     }
 
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    const accessToken = existingUser.generateAccessToken();
+    const refreshToken = existingUser.generateRefreshToken();
 
     return {
       success: true,
