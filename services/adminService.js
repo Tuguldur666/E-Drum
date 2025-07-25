@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt');
 const { verifyToken } = require('../utils/token');
 
 async function adminRegisterUser(accessToken, { firstName, lastName, phoneNumber, email, password, role }) {
@@ -14,12 +13,6 @@ async function adminRegisterUser(accessToken, { firstName, lastName, phoneNumber
       return { success: false, status: 403, message: 'Access denied. Admins only.' };
     }
 
-    firstName = firstName?.trim();
-    lastName = lastName?.trim();
-    phoneNumber = phoneNumber?.trim();
-    email = email?.trim().toLowerCase();
-    role = role?.trim();
-
     if (!firstName || !lastName || !phoneNumber || !email || !password || !role) {
       return { success: false, message: 'All fields are required.' };
     }
@@ -32,16 +25,12 @@ async function adminRegisterUser(accessToken, { firstName, lastName, phoneNumber
     if (existingUser) {
       return { success: false, message: 'User with this phone or email already exists.' };
     }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     const newUser = new User({
       firstName,
       lastName,
       phoneNumber,
       email,
-      password: hashedPassword,
+      password,
       role,
       isVerified: true,
       createdAt: new Date()

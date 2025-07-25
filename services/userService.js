@@ -4,10 +4,6 @@ const { verifyToken } = require('../utils/token');
 
 async function registerUser({ firstName, lastName, phoneNumber, email, password }) {
   try {
-    firstName = firstName?.trim();
-    lastName = lastName?.trim();
-    phoneNumber = phoneNumber?.trim();
-    email = email?.trim().toLowerCase();
 
     if (!firstName || !lastName || !phoneNumber || !email || !password) {
       return { success: false, message: 'All fields are required.' };
@@ -76,17 +72,26 @@ async function registerUser({ firstName, lastName, phoneNumber, email, password 
 async function loginUser({ phoneNumber, password }) {
   try {
     if (!phoneNumber || !password) {
-      return { success: false, message: 'Phone number and password are required.' };
+      return {
+        success: false,
+        message: 'Phone number and password are required.'
+      };
     }
 
     const existingUser = await User.findOne({ phoneNumber, isVerified: true });
     if (!existingUser) {
-      return { success: false, message: 'User not found or not verified.' };
+      return {
+        success: false,
+        message: 'User not found or not verified.'
+      };
     }
 
-    const isMatch = await existingUser.comparePassword(password); 
+    const isMatch = await existingUser.comparePassword(password);
     if (!isMatch) {
-      return { success: false, message: 'Invalid phone number or password' };
+      return {
+        success: false,
+        message: 'Invalid phone number or password.'
+      };
     }
 
     const accessToken = existingUser.generateAccessToken();
@@ -100,12 +105,14 @@ async function loginUser({ phoneNumber, password }) {
     };
   } catch (error) {
     console.error('❌ loginUser Error:', error);
+
     return {
       success: false,
-      message: 'Login failed due to server error.'
+      message: 'Login failed due to a server error.'
     };
   }
 }
+
 
 ////////////////////////// Login ////////////////////////
 
